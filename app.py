@@ -121,22 +121,17 @@ PAYER_GROUPS = {
 DEMO_USER = "demo"
 DEMO_PASS = "demo123"
 
-# Inline SVG logo mark used on the dashboard hero header and sidebar.
-MEDISCOPE_LOGO_SVG = """
-<svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <linearGradient id="msGrad" x1="2" y1="2" x2="34" y2="34" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#38BDF8"/>
-      <stop offset="100%" stop-color="#818CF8"/>
-    </linearGradient>
-  </defs>
-  <rect x="2" y="2" width="32" height="32" rx="9" fill="rgba(56,189,248,0.12)" stroke="url(#msGrad)" stroke-width="1.6"/>
-  <path d="M7.5 18.5H12.2L15.1 11.5L19.2 24.5L22.5 16L24.7 18.5H28.5" stroke="#38BDF8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-"""
+# Shared parameterized inline SVG icon builder for crisp HUD badges across the app.
+def _hud_svg(paths: str, size: int = 15, viewbox: str = "0 0 24 24", color: str = "currentColor") -> str:
+    return (
+        f'<svg width="{size}" height="{size}" viewBox="{viewbox}" fill="none" '
+        f'stroke="{color}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" '
+        f'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">{paths}</svg>'
+    )
 
-# Neon medical cross + ECG pulse mark for the login screen corner and card medallion.
+
 def _medical_cross_svg(size: int, grad_id: str) -> str:
+    """Neon medical cross + ECG pulse mark used on login and telemetry headers."""
     return (
         f'<svg width="{size}" height="{size}" viewBox="0 0 48 48" fill="none" '
         f'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
@@ -152,6 +147,58 @@ def _medical_cross_svg(size: int, grad_id: str) -> str:
         f'</svg>'
     )
 
+
+MEDISCOPE_LOGO_SVG = """
+<svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="msGrad" x1="2" y1="2" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="32" height="32" rx="9" fill="rgba(56,189,248,0.12)" stroke="url(#msGrad)" stroke-width="1.6"/>
+  <path d="M7.5 18.5H12.2L15.1 11.5L19.2 24.5L22.5 16L24.7 18.5H28.5" stroke="#38BDF8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+"""
+MEDISCOPE_SIDEBAR_LOGO_SVG = _medical_cross_svg(38, "msCrossSidebar")
+MEDISCOPE_HERO_PULSE_SVG = (
+    '<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+    '<path d="M3.5 18.5H10.2L14 7.5L19.4 28.5L23.4 14.5L26.2 18.5H32.5" '
+    'stroke="#38BDF8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<circle cx="14" cy="7.5" r="2" fill="#A5F3FC"/><circle cx="19.4" cy="28.5" r="2" fill="#2DD4BF"/>'
+    '</svg>'
+)
+
+KPI_ICON_PATHS = {
+    "discharges": '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/>',
+    "average stay": '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/>',
+    "median stay": '<path d="M2 17v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="M2 14h20M6 10V7a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>',
+    "average charges": '<circle cx="12" cy="12" r="9"/><path d="M14.8 9a2.8 2.8 0 0 0-5.6 0c0 1.8 2.8 2.2 2.8 4a2.8 2.8 0 0 1-5.6 0M12 5.5v13"/>',
+    "median charges": '<path d="M4 3h16v18l-3-2-2.5 2L12 19l-2.5 2L7 19l-3 2V3z"/><path d="M9 9h6M9 13h4"/>',
+    "rows loaded": '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/>',
+    "rows after cleaning": '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+    "columns loaded": '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18"/>',
+    "columns after cleaning": '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+}
+
+SIDEBAR_GROUP_ICONS = {
+    "Geography": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    "Patient Profile": '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+    "Clinical & Payer": '<path d="M12 21s-7-4.5-9-9.5C1.5 7.5 4.5 4 8.2 4c2.1 0 3.4 1.2 3.8 2 .4-.8 1.7-2 3.8-2C19.5 4 22.5 7.5 21 11.5 19 16.5 12 21 12 21z"/>',
+    "Stay & Outliers": '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
+}
+
+PANEL_TAG_ICONS = {
+    "bar": '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+    "box": '<rect x="8" y="6" width="8" height="12" rx="1"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="8" y1="12" x2="16" y2="12"/>',
+    "heatmap": '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+    "pie": '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>',
+    "histogram": '<rect x="3" y="11" width="4" height="9" rx="1"/><rect x="10" y="5" width="4" height="15" rx="1"/><rect x="17" y="8" width="4" height="12" rx="1"/>',
+}
+
+USER_AVATAR_SVG = _hud_svg('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>', size=14, color="#38BDF8")
+CHIP_TERMINAL_SVG = _hud_svg('<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>', size=12, color="#38BDF8")
+CHIP_SHIELD_SVG = _hud_svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>', size=12, color="#7DD3FC")
 
 LOGIN_CORNER_LOGO_SVG = _medical_cross_svg(40, "msCrossCorner")
 LOGIN_MEDALLION_SVG = _medical_cross_svg(48, "msCrossMedallion")
@@ -323,6 +370,25 @@ def inject_theme_css(authenticated: bool) -> None:
             bg_filter="brightness(1.06) saturate(1.06)",
             opacity="1",
         )
+        hosp_mtime = LOGIN_BG_FILE.stat().st_mtime_ns if LOGIN_BG_FILE.is_file() else 0
+        hosp_b64 = load_asset_b64(str(LOGIN_BG_FILE), hosp_mtime)
+        if hosp_b64:
+            dash_bg_css += f"""
+        .ms-hero::after {{
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-image: url("data:image/jpeg;base64,{hosp_b64}");
+            background-size: 920px auto;
+            background-position: right -360px top 62%;
+            background-repeat: no-repeat;
+            opacity: 0.56;
+            -webkit-mask-image: linear-gradient(96deg, transparent 0%, transparent 46%, rgba(0, 0, 0, 0.35) 66%, rgba(0, 0, 0, 0.92) 100%);
+            mask-image: linear-gradient(96deg, transparent 0%, transparent 46%, rgba(0, 0, 0, 0.35) 66%, rgba(0, 0, 0, 0.92) 100%);
+        }}
+            """
         dash_bg_css += """
         [data-testid="stAppViewContainer"] {
             height: 100vh !important;
@@ -356,6 +422,9 @@ def inject_theme_css(authenticated: bool) -> None:
         }
 
         /* Sidebar section headers & status pods matching HUD pill aesthetic */
+        [data-testid="stSidebar"] {
+            box-shadow: 6px 0 36px rgba(2, 132, 199, 0.14), inset -1px 0 0 rgba(56, 189, 248, 0.32) !important;
+        }
         [data-testid="stSidebar"] .ms-sidebar-brand {
             background: linear-gradient(135deg, rgba(14, 165, 233, 0.24), rgba(37, 99, 235, 0.14)) !important;
             border: 1px solid rgba(56, 189, 248, 0.48) !important;
@@ -371,18 +440,56 @@ def inject_theme_css(authenticated: bool) -> None:
             border-radius: 12px !important;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(186, 230, 253, 0.14) !important;
         }
+        .ms-avatar-ring {
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(56, 189, 248, 0.16);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            flex-shrink: 0;
+        }
         [data-testid="stSidebar"] .ms-filter-group {
             display: flex !important;
             align-items: center !important;
             gap: 8px !important;
             margin: 1rem 0 0.45rem 0 !important;
-            padding: 0.28rem 0.65rem !important;
+            padding: 0.30rem 0.65rem !important;
             border-radius: 9px !important;
-            background: linear-gradient(90deg, rgba(14, 165, 233, 0.16), rgba(37, 99, 235, 0.04) 75%, transparent) !important;
+            background: linear-gradient(90deg, rgba(14, 165, 233, 0.18), rgba(37, 99, 235, 0.04) 78%, transparent) !important;
             border: none !important;
             border-left: 2.5px solid #38BDF8 !important;
             color: #BAE6FD !important;
             letter-spacing: 0.10em !important;
+        }
+        [data-testid="stSidebar"] .ms-filter-group svg {
+            color: #38BDF8;
+            filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.65));
+            flex-shrink: 0;
+        }
+        [data-testid="stSidebar"] .react-aria-ComboBox > div:first-of-type:not(:has([data-tag])) {
+            position: relative !important;
+            padding-left: 34px !important;
+        }
+        [data-testid="stSidebar"] .react-aria-ComboBox > div:first-of-type:not(:has([data-tag]))::before {
+            content: "";
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            pointer-events: none;
+            background: #38BDF8;
+            opacity: 0.82;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z'/%3E%3Ccircle cx='12' cy='11' r='2.3'/%3E%3C/svg%3E") center / contain no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z'/%3E%3Ccircle cx='12' cy='11' r='2.3'/%3E%3C/svg%3E") center / contain no-repeat;
+        }
+        [data-testid="stSidebar"] hr {
+            border-color: rgba(56, 189, 248, 0.22) !important;
+            margin: 0.85rem 0 !important;
         }
         [data-testid="stSidebar"] .ms-sidebar-telemetry {
             background: linear-gradient(180deg, rgba(8, 25, 62, 0.84), rgba(4, 14, 36, 0.92)) !important;
@@ -393,6 +500,213 @@ def inject_theme_css(authenticated: bool) -> None:
                 0 0 18px rgba(56, 189, 248, 0.12),
                 inset 0 1px 0 rgba(224, 242, 254, 0.16),
                 inset 0 -2px 0 rgba(56, 189, 248, 0.65) !important;
+        }
+
+        /* Header Deploy action pill & menus */
+        [data-testid="stHeader"] button {
+            border-radius: 999px !important;
+            transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease !important;
+        }
+        [data-testid="stAppDeployButton"] button {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.22), rgba(37, 99, 235, 0.16)) !important;
+            border: 1px solid rgba(56, 189, 248, 0.45) !important;
+            color: #E0F2FE !important;
+            padding: 0.22rem 0.85rem !important;
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.18) !important;
+        }
+        [data-testid="stAppDeployButton"] button:hover {
+            border-color: #38BDF8 !important;
+            box-shadow: 0 0 18px rgba(56, 189, 248, 0.34) !important;
+        }
+        [data-testid="stMainMenuPopover"] [role="menu"],
+        [data-baseweb="popover"] > div,
+        [role="tooltip"] {
+            background: linear-gradient(180deg, rgba(6, 22, 56, 0.96), rgba(3, 12, 34, 0.98)) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border: 1px solid rgba(56, 189, 248, 0.42) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.56), 0 0 22px rgba(56, 189, 248, 0.18) !important;
+            color: #F1F5F9 !important;
+        }
+
+        /* Hero card, KPI cards & panel HUD polish across all tabs */
+        .ms-hero > * {
+            position: relative;
+            z-index: 2;
+        }
+        .ms-kpi {
+            border-radius: 16px !important;
+            background: linear-gradient(172deg, rgba(8, 26, 62, 0.84) 0%, rgba(3, 12, 32, 0.92) 100%) !important;
+            border: 1px solid rgba(56, 189, 248, 0.26) !important;
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.34),
+                inset 0 1px 0 rgba(224, 242, 254, 0.12) !important;
+            min-height: 128px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .ms-kpi::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(240px 100px at 85% 95%, color-mix(in srgb, var(--kpi-accent, #38BDF8) 18%, transparent), transparent 72%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .ms-kpi:hover {
+            transform: translateY(-3px) !important;
+            border-color: color-mix(in srgb, var(--kpi-accent, #38BDF8) 72%, rgba(255, 255, 255, 0.2)) !important;
+            box-shadow:
+                0 16px 36px rgba(0, 0, 0, 0.46),
+                0 0 24px color-mix(in srgb, var(--kpi-accent, #38BDF8) 26%, transparent),
+                inset 0 1px 0 rgba(224, 242, 254, 0.22) !important;
+        }
+        .ms-kpi > *:not(.ms-kpi-wave):not(.ms-kpi-bar) {
+            position: relative;
+            z-index: 2;
+        }
+        .ms-kpi-head {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 0.35rem;
+        }
+        .ms-kpi-icon {
+            width: 21px;
+            height: 21px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: color-mix(in srgb, var(--kpi-accent, #38BDF8) 18%, rgba(6, 20, 50, 0.85));
+            border: 1px solid color-mix(in srgb, var(--kpi-accent, #38BDF8) 45%, transparent);
+            color: var(--kpi-accent, #38BDF8);
+            flex-shrink: 0;
+        }
+        .ms-kpi-head .ms-kpi-label {
+            margin-bottom: 0 !important;
+            font-size: 0.64rem !important;
+            letter-spacing: 0.045em !important;
+            white-space: nowrap;
+        }
+        .ms-kpi-sub {
+            font-size: 0.74rem !important;
+            line-height: 1.28 !important;
+            margin-top: 0.28rem !important;
+        }
+        .ms-kpi-wave {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 140px;
+            height: 44px;
+            pointer-events: none;
+            opacity: 0.32;
+            z-index: 1;
+        }
+        .ms-panel-tag {
+            border-radius: 999px !important;
+            padding: 3px 10px !important;
+            background: rgba(14, 165, 233, 0.14) !important;
+            border: 1px solid rgba(56, 189, 248, 0.36) !important;
+            box-shadow: inset 0 1px 0 rgba(224, 242, 254, 0.12) !important;
+        }
+        div[class*="st-key-card_"] {
+            position: relative !important;
+            overflow: hidden !important;
+            border-radius: 18px !important;
+            border: 1px solid rgba(56, 189, 248, 0.28) !important;
+            box-shadow:
+                0 14px 36px rgba(0, 0, 0, 0.38),
+                inset 0 1px 0 rgba(186, 230, 253, 0.12) !important;
+        }
+        div[class*="st-key-card_"]::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.78), rgba(45, 212, 191, 0.42), transparent 88%);
+            pointer-events: none;
+        }
+        div[class*="st-key-card_"]:hover {
+            border-color: rgba(56, 189, 248, 0.48) !important;
+            box-shadow:
+                0 16px 40px rgba(0, 0, 0, 0.48),
+                0 0 24px rgba(56, 189, 248, 0.12),
+                inset 0 1px 0 rgba(224, 242, 254, 0.18) !important;
+        }
+
+        /* Headings, DataFrames, Tables, Alerts & Links across all 4 tabs */
+        [data-testid="stTabs"] h2 {
+            font-size: clamp(1.32rem, 2vw, 1.65rem) !important;
+            font-weight: 700 !important;
+            padding-left: 0.78rem !important;
+            border-left: 3px solid #38BDF8 !important;
+            background: linear-gradient(95deg, #F8FAFC 18%, #BAE6FD 92%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            margin-top: 0.25rem !important;
+            margin-bottom: 0.35rem !important;
+        }
+        [data-testid="stTabs"] h3 {
+            color: #F1F5F9 !important;
+            font-weight: 600 !important;
+            letter-spacing: -0.015em !important;
+        }
+        [data-testid="stTabs"] a {
+            color: #38BDF8 !important;
+            text-decoration-color: rgba(56, 189, 248, 0.45) !important;
+        }
+        [data-testid="stTabs"] a:hover {
+            color: #7DD3FC !important;
+        }
+        [data-testid="stDataFrame"] {
+            border: 1px solid rgba(56, 189, 248, 0.30) !important;
+            border-radius: 13px !important;
+            overflow: hidden !important;
+            background: rgba(4, 14, 36, 0.78) !important;
+            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(186, 230, 253, 0.08) !important;
+        }
+        [data-testid="stTable"] {
+            border: 1px solid rgba(56, 189, 248, 0.28) !important;
+            border-radius: 13px !important;
+            overflow: hidden !important;
+            background: rgba(4, 14, 36, 0.74) !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28) !important;
+        }
+        [data-testid="stTable"] th {
+            background: linear-gradient(180deg, rgba(10, 29, 72, 0.95), rgba(7, 20, 50, 0.95)) !important;
+            color: #7DD3FC !important;
+            padding: 0.65rem 0.85rem !important;
+        }
+        [data-testid="stTable"] td {
+            padding: 0.60rem 0.85rem !important;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.12) !important;
+        }
+        [data-testid="stTable"] tbody tr:nth-child(even) {
+            background: rgba(14, 165, 233, 0.04) !important;
+        }
+        [data-testid="stTable"] tbody tr:hover {
+            background: rgba(56, 189, 248, 0.11) !important;
+        }
+        [data-testid="stAlert"] {
+            border-radius: 13px !important;
+            border: 1px solid rgba(56, 189, 248, 0.36) !important;
+            background: linear-gradient(135deg, rgba(8, 26, 62, 0.86), rgba(4, 14, 36, 0.92)) !important;
+            backdrop-filter: blur(12px) !important;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28) !important;
+        }
+        [data-testid="stPlotlyChart"] .modebar-btn path {
+            fill: #7DD3FC !important;
+            opacity: 0.72;
+        }
+        [data-testid="stPlotlyChart"] .modebar-btn:hover path {
+            fill: #E0F2FE !important;
+            opacity: 1;
         }
 
         /* Sidebar & main multiselect pills + frosted dropdown popover */
@@ -1785,7 +2099,7 @@ def inject_theme_css(authenticated: bool) -> None:
         height: 40px;
         filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.85));
     }}
-    .ms-login-header {{
+    .ms-login-header Log scale
         width: 100% !important;
         text-align: center !important;
         margin-bottom: 0.24rem;
@@ -2473,20 +2787,49 @@ def show_text_table(data):
     st.table(data.set_index(data.columns[0]))
 
 
+def _kpi_wave_svg(accent: str, idx: int) -> str:
+    """Decorative subtle telemetry wave curve rendered inside the bottom corner of a KPI card."""
+    curves = (
+        "M0 36 C28 34, 42 22, 68 24 C92 26, 112 10, 140 6",
+        "M0 34 C30 28, 48 34, 72 20 C96 8, 116 24, 140 12",
+        "M0 24 C34 25, 58 21, 86 24 C108 26, 124 20, 140 21",
+        "M0 38 C26 30, 50 32, 78 20 C102 10, 120 18, 140 8",
+        "M0 36 C32 34, 52 24, 78 26 C104 28, 120 14, 140 10",
+    )
+    path = curves[idx % len(curves)]
+    grad_id = f"kpiWaveGrad{idx}"
+    return (
+        f'<svg class="ms-kpi-wave" viewBox="0 0 140 44" preserveAspectRatio="none" fill="none" aria-hidden="true">'
+        f'<defs><linearGradient id="{grad_id}" x1="0" y1="0" x2="0" y2="44" gradientUnits="userSpaceOnUse">'
+        f'<stop offset="0%" stop-color="{accent}" stop-opacity="0.45"/>'
+        f'<stop offset="100%" stop-color="{accent}" stop-opacity="0"/></linearGradient></defs>'
+        f'<path d="{path} L140 44 L0 44 Z" fill="url(#{grad_id})"/>'
+        f'<path d="{path}" stroke="{accent}" stroke-width="1.8" stroke-linecap="round"/>'
+        f'</svg>'
+    )
+
+
 def render_kpi_cards(cards: list[dict[str, str]]) -> None:
     """Render a responsive row of glassmorphic KPI telemetry cards."""
     cols = st.columns(len(cards))
-    for col, card in zip(cols, cards):
+    for idx, (col, card) in enumerate(zip(cols, cards)):
         accent = card.get("accent", BLUE)
         sub_html = f'<div class="ms-kpi-sub">{html.escape(card["sub"])}</div>' if card.get("sub") else ""
+        icon_paths = KPI_ICON_PATHS.get(card["label"].lower(), KPI_ICON_PATHS["discharges"])
+        icon_html = _hud_svg(icon_paths, size=13, color=accent)
+        wave_html = _kpi_wave_svg(accent, idx)
         with col:
             render_raw_html(
                 f"""
                 <div class="ms-kpi" style="--kpi-accent: {accent};">
                     <div class="ms-kpi-bar"></div>
-                    <div class="ms-kpi-label">{html.escape(card["label"])}</div>
+                    <div class="ms-kpi-head">
+                        <div class="ms-kpi-icon">{icon_html}</div>
+                        <div class="ms-kpi-label">{html.escape(card["label"])}</div>
+                    </div>
                     <div class="ms-kpi-value">{html.escape(card["value"])}</div>
                     {sub_html}
+                    {wave_html}
                 </div>
                 """
             )
@@ -2494,7 +2837,10 @@ def render_kpi_cards(cards: list[dict[str, str]]) -> None:
 
 def render_panel_header(tag: str, title: str, caption: str) -> None:
     """Render a uniform card header with a monospace tag, title, and caption."""
-    render_raw_html(f'<div class="ms-panel-tag">{html.escape(tag)}</div>')
+    tag_low = tag.lower()
+    icon_key = next((k for k in PANEL_TAG_ICONS if k in tag_low), "bar")
+    tag_icon = _hud_svg(PANEL_TAG_ICONS[icon_key], size=12, color="#38BDF8")
+    render_raw_html(f'<div class="ms-panel-tag">{tag_icon}<span>{html.escape(tag)}</span></div>')
     st.subheader(title)
     st.caption(caption)
 
@@ -2520,26 +2866,26 @@ def tidy(fig, height=430, title=None):
         margin=dict(l=12, r=14, t=50 if title else 22, b=14),
         title=dict(text=title, font=dict(size=15, color="#F8FAFC")) if title else None,
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(6, 16, 38, 0.54)",
+        plot_bgcolor="rgba(4, 13, 34, 0.56)",
         font=dict(family="Inter, Segoe UI, sans-serif", color="#E2E8F0", size=12),
         hoverlabel=dict(
-            bgcolor="#0B1325",
+            bgcolor="rgba(6, 19, 48, 0.96)",
             bordercolor="#38BDF8",
             font=dict(family="Inter, sans-serif", color="#F8FAFC", size=12),
         ),
         legend=dict(font=dict(color="#CBD5E1", size=11)),
     )
     fig.update_xaxes(
-        gridcolor="rgba(148, 163, 184, 0.12)",
-        zerolinecolor="rgba(148, 163, 184, 0.18)",
-        linecolor="rgba(148, 163, 184, 0.20)",
+        gridcolor="rgba(56, 189, 248, 0.09)",
+        zerolinecolor="rgba(56, 189, 248, 0.16)",
+        linecolor="rgba(56, 189, 248, 0.18)",
         tickfont=dict(color="#CBD5E1", size=11),
         title_font=dict(color="#94A3B8", size=12),
     )
     fig.update_yaxes(
-        gridcolor="rgba(148, 163, 184, 0.12)",
-        zerolinecolor="rgba(148, 163, 184, 0.18)",
-        linecolor="rgba(148, 163, 184, 0.20)",
+        gridcolor="rgba(56, 189, 248, 0.09)",
+        zerolinecolor="rgba(56, 189, 248, 0.16)",
+        linecolor="rgba(56, 189, 248, 0.18)",
         tickfont=dict(color="#CBD5E1", size=11),
         title_font=dict(color="#94A3B8", size=12),
     )
@@ -2804,6 +3150,12 @@ def apply_filters(df, sel):
 # =============================================================================
 # 7. PAGE LAYOUT: LOGIN GATE, SIDEBAR FILTERS, HERO, KPIS & FOUR TABS
 # =============================================================================
+def _sidebar_group_html(title: str) -> str:
+    """Return sidebar section heading markup paired with its matching HUD icon."""
+    icon = _hud_svg(SIDEBAR_GROUP_ICONS.get(title, ""), size=14, color="#38BDF8")
+    return f'<div class="ms-filter-group">{icon}<span>{html.escape(title)}</span></div>'
+
+
 def render_sidebar(df: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
     """Render the dark-tech filter sidebar, session badge, and logout button."""
     auth_user = st.session_state.get("auth_user") or "Operator"
@@ -2813,7 +3165,7 @@ def render_sidebar(df: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
         render_raw_html(
             f"""
             <div class="ms-sidebar-brand">
-                {MEDISCOPE_LOGO_SVG}
+                {MEDISCOPE_SIDEBAR_LOGO_SVG}
                 <div>
                     <div class="ms-sidebar-brand-title">MediScope</div>
                     <div class="ms-sidebar-brand-sub">Telemetry Console</div>
@@ -2821,6 +3173,7 @@ def render_sidebar(df: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
             </div>
             <div class="ms-user-pill">
                 <div class="ms-user-name">
+                    <span class="ms-avatar-ring">{USER_AVATAR_SVG}</span>
                     <span class="ms-status-dot"></span>
                     <span>{html.escape(auth_user)}</span>
                 </div>
@@ -2831,21 +3184,21 @@ def render_sidebar(df: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
 
         st.caption("Leave a filter empty to include everything.")
 
-        render_raw_html('<div class="ms-filter-group">Geography</div>')
+        render_raw_html(_sidebar_group_html("Geography"))
         regions = st.multiselect("Region", sorted(df["Region"].cat.categories), placeholder="All regions")
         county_pool = df if not regions else df[df["Region"].isin(regions)]
         counties = st.multiselect("County", sorted(counts(county_pool["County"]).index), placeholder="All counties")
 
-        render_raw_html('<div class="ms-filter-group">Patient Profile</div>')
+        render_raw_html(_sidebar_group_html("Patient Profile"))
         ages = st.multiselect("Age group", AGE_ORDER, placeholder="All ages")
         genders = st.multiselect("Gender", sorted(df["Gender"].cat.categories), placeholder="All")
 
-        render_raw_html('<div class="ms-filter-group">Clinical & Payer</div>')
+        render_raw_html(_sidebar_group_html("Clinical & Payer"))
         severities = st.multiselect("Severity of illness", SEVERITY_ORDER, placeholder="All severities")
         payers = st.multiselect("Primary payer", sorted(df["Primary Payer"].cat.categories), placeholder="All payers")
         admissions = st.multiselect("Admission type", sorted(df["Admission Type"].cat.categories), placeholder="All types")
 
-        render_raw_html('<div class="ms-filter-group">Stay & Outliers</div>')
+        render_raw_html(_sidebar_group_html("Stay & Outliers"))
         stay_max = int(df["Stay Days"].max())
         stay_range = st.slider("Length of stay (days)", 1, stay_max, (1, stay_max))
         no_outliers = st.checkbox(
@@ -2890,16 +3243,16 @@ def render_hero_header(f: pd.DataFrame, df: pd.DataFrame, no_outliers: bool) -> 
         <div class="ms-hero">
             <div class="ms-hero-top">
                 <div class="ms-hero-badges">
-                    <span class="ms-chip">MEDISCOPE // NY SPARCS 2021</span>
+                    <span class="ms-chip">{CHIP_TERMINAL_SVG}<span>MEDISCOPE // NY SPARCS 2021</span></span>
                     <span class="ms-chip ms-chip-teal"><span class="ms-status-dot"></span>{len(f):,} / {len(df):,} ACTIVE</span>
-                    <span class="ms-chip">{outlier_chip}</span>
+                    <span class="ms-chip">{CHIP_SHIELD_SVG}<span>{outlier_chip}</span></span>
                 </div>
                 <div class="ms-hero-badges">
-                    <span class="ms-chip">SESSION: {html.escape(auth_user.upper())}</span>
+                    <span class="ms-chip">{USER_AVATAR_SVG}<span>SESSION: {html.escape(auth_user.upper())}</span></span>
                 </div>
             </div>
             <div class="ms-hero-title-row">
-                {MEDISCOPE_LOGO_SVG}
+                {MEDISCOPE_HERO_PULSE_SVG}
                 <h1 class="ms-hero-title">Hospital Inpatient Discharges Dashboard</h1>
             </div>
             <p class="ms-hero-sub">
@@ -3028,7 +3381,7 @@ def render_eda_tab(f: pd.DataFrame) -> None:
     with st.container(border=True, key="card_eda_answers"):
         for question, answer in research_answers(f):
             st.markdown(f"**{question}**")
-            st.markdown(answer)
+            st.markdown(answer.replace("$", r"\$"))
 
     with st.container(border=True, key="card_eda_stats"):
         st.subheader("Statistical summary")
@@ -3193,7 +3546,7 @@ def render_problem_tab() -> None:
             "Moderate, Major or Extreme - so costs can be compared fairly between sicker and healthier patient mixes.\n"
             "- **Diagnoses** are coded with AHRQ's Clinical Classifications Software Refined (CCSR); the first three "
             "letters of each code give the body system (CIR = circulatory, RSP = respiratory ...), which this app uses "
-            "to group 391 codes into readable categories.\n"
+            "to group the diagnosis codes into readable categories.\n"
             "- **Charges are not costs.** Charges are the amount a hospital bills; most payers pay negotiated or fixed "
             "rates, so billed charges are far higher than the estimated cost of care. The app shows both.\n"
             "- **Skewed money data:** hospital bills have a long right tail, so this dashboard reports medians next to "
